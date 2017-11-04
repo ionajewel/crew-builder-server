@@ -1,0 +1,9 @@
+## Mac OSX ##
+.DS_Store
+
+## Logs
+logs
+*.log
+
+## Dependencies
+node_modules/

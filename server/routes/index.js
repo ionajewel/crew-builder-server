@@ -1,26 +1,31 @@
 const models = require('../models');
 const controllers = require('../controllers');
+const passport = require('passport');
 
 module.exports = (app) => {
-  app.get('/', function(req, res, next) {
-    res.render('index', { title: 'Express' });
+  app.get('/api', (req, res) => {
+    res.status(200).send({ message: 'Hello' });
   });
 
-  app.get('/user/crews', controllers.crews.getCrewsByUser);
-  app.get('/user/tasks', controllers.tasks.getTasksByUserCrew);
-  app.get('/crew/tasks', controllers.tasks.getTasksByCrew);
-  app.get('/crews', constrollers.crews.searchCrews);
-  app.get('/leader/members', controllers.users.getCrewMembers);
-  app.get('/leader/tasks', controllers.tasks.getUnverifiedTasks);
+  app.get('/api/auth/me', controllers.auth.lookup);
+  app.get('/api/user/crews', controllers.crews.getCrewsByUser);
+  app.get('/api/user/tasks', controllers.tasks.getTasksByUserCrew);
+  app.get('/api/crew/tasks', controllers.tasks.getTasksByCrew);
+  app.get('/api/crews', controllers.crews.searchCrews);
+  app.get('/api/leader/members', controllers.users.getCrewMembers);
+  app.get('/api/leader/tasks', controllers.tasks.getUnverifiedTasks);
 
-  app.post('/task', controllers.tasks.newTask);
-  app.post('/crew', controllers.crews.newCrew);
-  app.post('/user/crews', controllers.user_crews.joinCrew);
-  app.post('/user/tasks', controller.tasks.claimTask);
+  app.post('/api/auth/facbook',
+    passport.authenticate('facebook-token', { session: false }),
+    controllers.auth.facebook);
+  app.post('/api/task', controllers.tasks.newTask);
+  app.post('/api/crew', controllers.crews.newCrew);
+  app.post('/api/user/crews', controllers.user_crews.joinCrew);
+  app.post('/api/user/tasks', controllers.tasks.claimTask);
 
-  app.put('/user/tasks', controllers.user_tasks.updateTask);
+  app.put('/api/user/tasks', controllers.user_tasks.updateTask);
 
-  app.delete('/user/crews', controllers.user_crews.leaveCrew);
-  app.delete('/tasks', controllers.tasks.deleteTask);
+  app.delete('/api/user/crews', controllers.user_crews.leaveCrew);
+  app.delete('/api/tasks', controllers.tasks.deleteTask);
 
 };

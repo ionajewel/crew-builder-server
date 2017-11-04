@@ -5,7 +5,9 @@ module.exports = {
     let crew_id = req.query.crew_id;
     return db.Task
       .findAll({
-        where: { crew_id: crew_id }
+        where: {
+          crew_id: crew_id
+        }
       })
       .then(crews => res.status(200).send(crews))
       .catch(err => res.status(401).send(err));
@@ -15,11 +17,18 @@ module.exports = {
     let crew_id = req.query.crew_id;
     return db.Task
       .findAll({
-        where: { crew_id: crew_id },
+        where: {
+          crew_id: crew_id
+        },
         include: [{
           model: db.User_Task,
-          where: {completed: true, verified: false},
-          include: [{ model: db.User }]
+          where: {
+            completed: true,
+            verified: false
+          },
+          include: [{
+            model: db.User
+          }]
         }]
       })
       .then(tasks => res.status(200).send(tasks))
@@ -44,7 +53,11 @@ module.exports = {
   deleteTask(req, res) {
     let task_id = req.query.task_id;
     return db.Task
-      .destroy({ where: { id: task_id } })
+      .destroy({
+        where: {
+          id: task_id
+        }
+      })
       .then(destroyed => res.status(202).send(destroyed))
       .catch(err => res.status(400).send(err));
   },
@@ -53,10 +66,11 @@ module.exports = {
   claimTask(req, res) {
     let user_id = req.query.user_id;
     let task_id = req.query.task_id;
-    return db.User_Task.create({
-      user_id: user_id,
-      task_id: task_id,
-    })
+    return db.User_Task
+      .create({
+        user_id: user_id,
+        task_id: task_id,
+      })
       .then(created => res.status(201).send(created))
       .catch(err => res.status(400).send(err));
   },
@@ -68,8 +82,17 @@ module.exports = {
       tasksUnclaimed;
     return db.Task
       .findAll({
-        where: { crew_id: crew_id },
-        include: [{ model: db.User_Task, where: { user_id: user_id, verified: false } }] })
+        where: {
+          crew_id: crew_id
+        },
+        include: [{
+          model: db.User_Task,
+          where: {
+            user_id: user_id,
+            verified: false
+          }
+        }]
+      })
       .then(tasks => {
         tasksInProgress = tasks;
         return db.Task
@@ -77,7 +100,12 @@ module.exports = {
             include: { model: db.User_Task,
               where: {
                 user_id: {
-                  $notIn: db.User_Task.findAll({ where: { user_id: user_id }, attributes: ['task_id'] })
+                  $notIn: db.User_Task.findAll({
+                    where: {
+                      user_id: user_id
+                    },
+                    attributes: ['task_id']
+                  })
                 }
               }
             }
@@ -85,7 +113,10 @@ module.exports = {
       })
       .then(tasks => {
         tasksUnclaimed = tasks;
-        res.status(200).send({tasksInProgress: tasksInProgress, tasksAvailable: tasksUnclaimed});
+        res.status(200).send({
+          tasksInProgress: tasksInProgress,
+          tasksAvailable: tasksUnclaimed
+        });
       })
       .catch(err => {
         res.status(400).send(err);

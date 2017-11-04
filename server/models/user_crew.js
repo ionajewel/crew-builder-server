@@ -6,9 +6,9 @@ module.exports = (sequelize, DataTypes) => {
     role: DataTypes.STRING
   });
 
-  UserCrew.associate = models => {
-    UserCrew.belongsTo(models.User, {foreignKey: 'user_id'});
-    UserCrew.belongsTo(models.Crew, {foreignKey: 'crew_id'});
+  User_Crew.associate = models => {
+    User_Crew.belongsTo(models.User, {foreignKey: 'user_id'});
+    User_Crew.belongsTo(models.Crew, {foreignKey: 'crew_id'});
   };
 
   return User_Crew;

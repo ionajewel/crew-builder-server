@@ -6,9 +6,9 @@ module.exports = (sequelize, DataTypes) => {
     archived: DataTypes.BOOLEAN
   });
 
-  UserTask.associate = models => {
-    UserTask.belongsTo(models.User, {foreignKey: 'user_id'});
-    UserTask.belongsTo(models.Task, {foreignKey: 'task_id'});
+  User_Task.associate = models => {
+    User_Task.belongsTo(models.User, {foreignKey: 'user_id'});
+    User_Task.belongsTo(models.Task, {foreignKey: 'task_id'});
   };
 
   return User_Task;

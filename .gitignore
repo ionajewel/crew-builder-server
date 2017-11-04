@@ -7,3 +7,6 @@ logs
 
 ## Dependencies
 node_modules/
+
+## Configuration files
+config.js

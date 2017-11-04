@@ -1,0 +1,15 @@
+{
+  "name": "crew-builder-server",
+  "version": "1.0.0",
+  "description": "server for crew-builder",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Iona Olive",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "morgan": "^1.9.0"
+  }
+}

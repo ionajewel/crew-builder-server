@@ -36,16 +36,8 @@ module.exports = {
   },
 
   newTask(req, res) {
-    let taskData = {
-      name: req.body.name,
-      description: req.body.description,
-      points: req.body.points,
-      limit: req.body.limit,
-      expiry: req.body.expiry,
-      crew_id: req.body.crew_id
-    };
     return db.Task
-      .create(taskData)
+      .create(req.body)
       .then(task => res.status(201).send(task))
       .catch(err => res.status(400).send(err));
   },
@@ -95,32 +87,36 @@ module.exports = {
       })
       .then(tasks => {
         tasksInProgress = tasks;
-        return db.Task
-          .findAll({ where: { crew_id: crew_id },
-            include: { model: db.User_Task,
-              where: {
-                user_id: {
-                  $notIn: db.User_Task.findAll({
-                    where: {
-                      user_id: user_id
-                    },
-                    attributes: ['task_id']
-                  })
-                }
-              }
-            }
-          });
+        return db.User_Task.findAll({
+          where: {
+            user_id: user_id
+          },
+          attributes: ['task_id']
+        });
       })
       .then(tasks => {
-        tasksUnclaimed = tasks;
+        tasks = tasks.map(task => task.task_id);
+        return db.Task
+          .findAll({
+            where: {
+              crew_id: crew_id,
+              id: {
+                $notIn: tasks
+              }
+            },
+
+          });
+
+      })
+      .then(tasks => {
+        tasksAvailable = tasks;
         res.status(200).send({
           tasksInProgress: tasksInProgress,
-          tasksAvailable: tasksUnclaimed
+          tasksAvailable: tasksAvailable
         });
       })
       .catch(err => {
         res.status(400).send(err);
       });
-
   },
 };

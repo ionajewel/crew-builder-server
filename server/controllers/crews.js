@@ -40,15 +40,16 @@ module.exports = {
 
   searchCrews(req, res) {
     if (req.query.qs) {
-      let qs = `%${qs}%`;
+      console.log(req.query.qs);
+      let qs = `%${req.query.qs}%`;
       return db.Crew
         .findAll({
           where: {
             $or: {
-              name: {
+              crew_name: {
                 $iLike: qs
               },
-              description: {
+              crew_description: {
                 $iLike: qs
               }
             }

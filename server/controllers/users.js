@@ -10,7 +10,7 @@ module.exports = {
   },
 
   getCrewMembers(req, res) {
-    let crew_id = rew.query.crew_id;
+    let crew_id = req.query.crew_id;
     return db.User
       .findAll({
         include: [{

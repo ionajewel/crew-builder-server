@@ -15,13 +15,13 @@ module.exports = (app) => {
   app.get('/api/leader/members', controllers.users.getCrewMembers);
   app.get('/api/leader/tasks', controllers.tasks.getUnverifiedTasks);
 
-  // app.post('/api/auth/facbook',
+  // app.post('/api/auth/facebook',
   //   passport.authenticate('facebook-token', { session: false }),
   //   controllers.auth.facebook);
   app.post('/api/task', controllers.tasks.newTask);
   app.post('/api/crew', controllers.crews.newCrew);
   app.post('/api/user/crews', controllers.user_crews.joinCrew);
-  app.post('/api/user/tasks', controllers.tasks.claimTask);
+  app.post('/api/user/tasks', controllers.user_tasks.claimTask);
 
   app.put('/api/user/tasks', controllers.user_tasks.updateTask);
 

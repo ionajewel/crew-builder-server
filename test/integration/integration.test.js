@@ -6,7 +6,7 @@ const db = require('../../server/models');
 const seed = require('../../server/seeders');
 chai.use(require('chai-moment'));
 
-describe('user creation page', function () {
+describe('API integration tests', function () {
 
   beforeEach(function (done) {
     seed(db).then(() => done());
@@ -149,5 +149,67 @@ describe('user creation page', function () {
         done();
       })
       .catch(err => done(err));
+  });
+
+  it('Creates a new crew and associates with the leader', function(done) {
+    let crew = {
+      user_id: 4,
+      crew_name: 'New crew',
+      crew_description: 'New crew description',
+      crew_url: 'sampleurl',
+      crew_image: 'sampleimage'
+    };
+
+    request(app)
+      .post('/api/crew')
+      .send(crew)
+      .expect(201)
+      .then(res => {
+        expect(res.body.crew_name).to.equal('New crew');
+        done();
+      })
+      .catch(err => done(err));
+  });
+
+  it('Creates a new User_Crew entry when a user joins a crew', function(done) {
+    db.User
+      .create()
+      .then(created => {
+        return request(app)
+          .post('/api/user/crews')
+          .send({
+            user_id: created.id,
+            crew_id: 4,
+          });
+      })
+      .then(res => {
+        expect(res.body.user_id).to.equal(16);
+        expect(res.body.crew_id).to.equal(4);
+        expect(res.body.role).to.equal('member');
+        expect(res.body.points).to.equal(0);
+        expect(res.body.achievement).to.equal('Newbie');
+        done();
+      })
+      .catch(err => done(err));
+  });
+
+  it('Creates a new User_Task entry when a user claims a task', function(done) {
+    request(app)
+      .post('/api/user/tasks')
+      .send({
+        user_id: 5,
+        task_id: 35
+      })
+      .expect(201)
+      .then(res => {
+        expect(res.body.user_id).to.equal(5);
+        expect(res.body.task_id).to.equal(35);
+        expect(res.body.completed).to.be.false;
+        expect(res.body.verified).to.be.false;
+        expect(res.body.archived).to.be.false;
+        done();
+      })
+      .catch(err => done(err));
+
   });
 });

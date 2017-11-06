@@ -1,9 +1,18 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   var User_Task = sequelize.define('User_Task', {
-    completed: DataTypes.BOOLEAN,
-    verified: DataTypes.BOOLEAN,
-    archived: DataTypes.BOOLEAN
+    completed: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    verified: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    archived: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    }
   });
 
   User_Task.associate = models => {

@@ -1,9 +1,18 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   var User_Crew = sequelize.define('User_Crew', {
-    points: DataTypes.INTEGER,
-    achievement: DataTypes.STRING,
-    role: DataTypes.STRING
+    points: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    achievement: {
+      type: DataTypes.STRING,
+      defaultValue: 'Newbie'
+    },
+    role: {
+      type: DataTypes.STRING,
+      defaultValue: 'member'
+    }
   });
 
   User_Crew.associate = models => {

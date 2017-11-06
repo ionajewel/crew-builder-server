@@ -37,25 +37,34 @@ module.exports = {
   },
 
   verifyTask(user_id, task_id) {
-    return db.User_Task.update({
-      verified: true
-    }, {
-      where: {
-        user_id: user_id,
-        task_id: task_id
-      }
-    });
+    return db.User_Task
+      .update({
+        verified: true
+      }, {
+        where: {
+          user_id: user_id,
+          task_id: task_id
+        }
+      });
   },
 
   completeTask(user_id, task_id) {
-    return db.User_Task.update({
-      completed: true
-    }, {
-      where: {
-        user_id: user_id,
-        task_id: task_id
-      }
-    });
-  }
+    return db.User_Task
+      .update({
+        completed: true
+      }, {
+        where: {
+          user_id: user_id,
+          task_id: task_id
+        }
+      });
+  },
+
+  claimTask(req, res) {
+    return db.User_Task
+      .create(req.body)
+      .then(created => res.status(201).send(created))
+      .catch(err => res.status(400).send(err));
+  },
 
 };

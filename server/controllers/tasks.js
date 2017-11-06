@@ -54,19 +54,6 @@ module.exports = {
       .catch(err => res.status(400).send(err));
   },
 
-
-  claimTask(req, res) {
-    let user_id = req.query.user_id;
-    let task_id = req.query.task_id;
-    return db.User_Task
-      .create({
-        user_id: user_id,
-        task_id: task_id,
-      })
-      .then(created => res.status(201).send(created))
-      .catch(err => res.status(400).send(err));
-  },
-
   getTasksByUserCrew(req, res) {
     let user_id = req.query.user_id;
     let crew_id = req.query.crew_id;

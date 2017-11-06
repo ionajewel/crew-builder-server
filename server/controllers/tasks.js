@@ -50,8 +50,11 @@ module.exports = {
           id: task_id
         }
       })
-      .then(destroyed => res.status(202).send(destroyed))
-      .catch(err => res.status(400).send(err));
+      .then(destroyed => res.sendStatus(202))
+      .catch(err => {
+        console.log(err);
+        res.status(400).send(err);
+      });
   },
 
   getTasksByUserCrew(req, res) {

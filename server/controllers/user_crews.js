@@ -8,10 +8,10 @@ module.exports = {
       .destroy({
         where: {
           crew_id: crew_id,
-          user_id: userId
+          user_id: user_id
         }
       })
-      .then(destroyed => res.status(202).send(destroyed))
+      .then(destroyed => res.sendStatus(202))
       .catch(err => res.status(400).send(err));
   },
 

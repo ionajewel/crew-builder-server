@@ -210,6 +210,99 @@ describe('API integration tests', function () {
         done();
       })
       .catch(err => done(err));
+  });
 
+  it('Updates a task as completed', function(done) {
+    db.User_Task
+      .create({
+        user_id: 5,
+        task_id: 35
+      })
+      .then(created => {
+        return request(app)
+          .put('/api/user/tasks')
+          .send({
+            user_id: 5,
+            task_id: 35
+          });
+      })
+      .then(res => {
+        return db.User_Task
+          .findOne({
+            where: {
+              user_id: 5,
+              task_id: 35
+            }
+          });
+      })
+      .then(found => {
+        expect(found.completed).to.be.true;
+        done();
+      })
+      .catch(err => done(err));
+  });
+
+  it('Updates a task and adds points when a task is verified', function(done) {
+    request(app)
+      .put('/api/user/tasks')
+      .send({
+        user_id: 3,
+        task_id: 98,
+        verified: true
+      })
+      .expect(200)
+      .then(res => {
+        return db.User_Task
+          .findOne({
+            where: {
+              user_id: 3,
+              task_id: 98
+            }
+          });
+      })
+      .then(found => {
+        expect(found.verified).to.be.true;
+        done();
+      })
+      .catch(err => done(err));
+  });
+
+  it('Deletes a row from User-Crew when a member leaves', function(done) {
+    request(app)
+      .delete('/api/user/crews?user_id=1&crew_id=3')
+      .expect(202)
+      .then(res => {
+        return db.User_Crew
+          .findOne({
+            where: {
+              user_id: 1,
+              crew_id: 3
+            }
+          });
+      })
+      .then(found => {
+        expect(!found).to.be.true;
+        done();
+      })
+      .catch(err => done(err));
+  });
+
+  it('Deletes a task and all associations', function(done) {
+    request(app)
+      .delete('/api/tasks?task_id=1')
+      .expect(202)
+      .then(res => {
+        db.Task
+          .findOne({
+            where: {
+              id: 1
+            }
+          });
+      })
+      .then(found => {
+        expect(!found).to.be.true;
+        done();
+      })
+      .catch(err => done(err));
   });
 });

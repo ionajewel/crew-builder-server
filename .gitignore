@@ -9,4 +9,5 @@ logs
 node_modules/
 
 ## Configuration files
+config.js
 config.json
